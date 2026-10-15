@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Confetti from './Confetti.jsx'
 import { Shapes } from './Decorations.jsx'
-import { ALL_QUESTIONS, MAX_SCORE, POINTS } from '../data/questions.js'
+import { POINTS } from '../data/questions.js'
 
-const TOTAL = ALL_QUESTIONS.length
 
 function verdict(pct) {
   if (pct === 100) return { emoji: '👑', text: '¡Perfección absoluta! Eres una enciclopedia andante.' }
@@ -46,7 +45,9 @@ function recordText(info) {
   return `Tu récord sigue siendo ${info.previous.score.toLocaleString('es')} puntos.`
 }
 
-export default function Results({ score, correct, answers, mode, recordInfo, onReplay, onReview, onHome }) {
+export default function Results({ questions, title = 'reto de cultura general', score, correct, answers, mode, recordInfo, onReplay, onReview, onHome }) {
+  const TOTAL = questions.length
+  const MAX_SCORE = (TOTAL - 1) * POINTS.normal + POINTS.bonus
   const pct = Math.round((correct / TOTAL) * 100)
   const v = verdict(pct)
   const bonus = answers[TOTAL - 1]
@@ -67,7 +68,7 @@ export default function Results({ score, correct, answers, mode, recordInfo, onR
 
   const share = async () => {
     const lines = [
-      '🧠 DAIS QUIZZ: reto de cultura general',
+      `🧠 DAIS QUIZZ: ${title}`,
       `⭐ ${score.toLocaleString('es')} de ${MAX_SCORE.toLocaleString('es')} puntos`,
       `✅ ${correct}/${TOTAL} aciertos (${pct} %)`,
       `${bonus?.correct ? '🏅 ¡Bonus acertado!' : '🎯 Bonus fallado'} · Modo ${mode === 'timed' ? 'con tiempo ⏱️' : 'sin tiempo 🧘'}`,

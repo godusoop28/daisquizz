@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ALL_QUESTIONS, CATEGORIES, POINTS, QUESTIONS, TIME_PER_QUESTION } from '../data/questions.js'
+import { CATEGORIES, POINTS, TIME_PER_QUESTION } from '../data/questions.js'
 import { Shapes } from './Decorations.jsx'
 
 const LETTERS = ['A', 'B', 'C']
 const KEY_MAP = { a: 0, b: 1, c: 2, 1: 0, 2: 1, 3: 2 }
 const TOTAL_MS = TIME_PER_QUESTION * 1000
 
-export default function Quiz({ mode, onFinish, onExit, sfx }) {
+export default function Quiz({ questions, mode, onFinish, onExit, sfx }) {
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState([])
   const [selected, setSelected] = useState(null)
@@ -17,13 +17,13 @@ export default function Quiz({ mode, onFinish, onExit, sfx }) {
   const headingRef = useRef(null)
   const nextRef = useRef(null)
 
-  const q = ALL_QUESTIONS[index]
+  const q = questions[index]
   const cat = CATEGORIES[q.category]
-  const isLast = index === ALL_QUESTIONS.length - 1
+  const isLast = index === questions.length - 1
   const timed = mode === 'timed'
   const current = answers[index]
   const score = answers.reduce(
-    (sum, a, i) => (a.correct ? sum + (ALL_QUESTIONS[i].bonus ? POINTS.bonus : POINTS.normal) : sum),
+    (sum, a, i) => (a.correct ? sum + (questions[i].bonus ? POINTS.bonus : POINTS.normal) : sum),
     0,
   )
 
@@ -106,7 +106,7 @@ export default function Quiz({ mode, onFinish, onExit, sfx }) {
 
   const seconds = Math.ceil(timeLeft / 1000)
   const lowTime = timed && status === 'answering' && seconds <= 5
-  const progress = ((index + (status === 'revealed' ? 1 : 0)) / ALL_QUESTIONS.length) * 100
+  const progress = ((index + (status === 'revealed' ? 1 : 0)) / questions.length) * 100
 
   let feedback = null
   if (status === 'revealed') {
@@ -156,7 +156,7 @@ export default function Quiz({ mode, onFinish, onExit, sfx }) {
             <strong className="bonus-label">⭐ ¡Pregunta bonus! · {POINTS.bonus} pts</strong>
           ) : (
             <strong>
-              Pregunta {index + 1} de {QUESTIONS.length}
+              Pregunta {index + 1} de {questions.length - 1}
             </strong>
           )}
           {timed && (
@@ -170,7 +170,7 @@ export default function Quiz({ mode, onFinish, onExit, sfx }) {
           role="progressbar"
           aria-label="Progreso del reto"
           aria-valuemin={0}
-          aria-valuemax={ALL_QUESTIONS.length}
+          aria-valuemax={questions.length}
           aria-valuenow={index + (status === 'revealed' ? 1 : 0)}
         >
           <div className="progress__fill" style={{ width: `${progress}%` }} />
@@ -193,7 +193,16 @@ export default function Quiz({ mode, onFinish, onExit, sfx }) {
       <section className="quiz__stage" key={q.id}>
         <div className="quiz__art" aria-hidden="true">
           <div className="art-blob" style={{ '--cat': cat.color }}>
-            <span className="art-blob__emoji">{q.emoji}</span>
+            {q.image ? (
+              <img
+                className={`art-blob__img ${q.silhouette && status !== 'revealed' ? 'is-silhouette' : ''}`}
+                src={q.image}
+                alt=""
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <span className="art-blob__emoji">{q.emoji}</span>
+            )}
             <span className="art-blob__sat art-blob__sat--1">{cat.emoji}</span>
             <span className="art-blob__sat art-blob__sat--2">{q.bonus ? '⭐' : '✨'}</span>
           </div>
@@ -258,7 +267,7 @@ export default function Quiz({ mode, onFinish, onExit, sfx }) {
                   <span aria-hidden="true">💡</span> {q.explanation}
                 </p>
                 <button type="button" className="btn btn--next" onClick={goNext} ref={nextRef}>
-                  {isLast ? 'Ver resultados 🏁' : index === QUESTIONS.length - 1 ? '¡Ir al bonus! ⭐' : 'Siguiente →'}
+                  {isLast ? 'Ver resultados 🏁' : index === questions.length - 2 ? '¡Ir al bonus! ⭐' : 'Siguiente →'}
                 </button>
               </div>
             )}

@@ -14,6 +14,7 @@ export const CATEGORIES = {
   onepiece: { label: 'One Piece', emoji: '🏴‍☠️', color: '#dc2626' },
   pokemon: { label: 'Pokémon', emoji: '⚡', color: '#eab308' },
   naruto: { label: 'Naruto', emoji: '🍥', color: '#f97316' },
+  dragonball: { label: 'Dragon Ball', emoji: '🐉', color: '#f59e0b' },
 }
 
 export const QUESTIONS = [

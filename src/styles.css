@@ -1451,3 +1451,50 @@ kbd {
     display: none;
   }
 }
+
+/* Imágenes de las preguntas generadas desde las APIs */
+.art-blob__img {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 0 rgba(20, 8, 60, 0.2));
+  animation: bob 4s ease-in-out infinite;
+  transition: filter 0.4s ease;
+}
+
+.art-blob__img.is-silhouette {
+  filter: brightness(0) drop-shadow(0 8px 0 rgba(20, 8, 60, 0.2));
+}
+
+.home__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn--anime {
+  background: #f97316;
+  color: #fff;
+  font-size: clamp(1.1rem, 0.95rem + 0.8vw, 1.35rem);
+  padding: 0.75em 1.6em;
+  box-shadow: 0 7px 0 #9a3412, 0 16px 30px rgba(20, 8, 60, 0.4);
+}
+
+.btn--anime:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn--anime:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.home__error {
+  margin: 0;
+  padding: 0.6em 1em;
+  border-radius: 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 700;
+}

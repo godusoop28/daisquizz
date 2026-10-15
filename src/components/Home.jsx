@@ -7,7 +7,7 @@ const MODES = [
   { id: 'relaxed', icon: '🧘', title: 'Sin tiempo', text: 'Para jugar tranquilo' },
 ]
 
-export default function Home({ mode, onModeChange, onStart }) {
+export default function Home({ mode, onModeChange, onStart, onStartAnime, loading, loadError }) {
   const record = loadRecord()
 
   return (
@@ -54,9 +54,29 @@ export default function Home({ mode, onModeChange, onStart }) {
           </div>
         </fieldset>
 
-        <button type="button" className="btn btn--start" onClick={onStart}>
-          ¡Comenzar el reto! <span aria-hidden="true">🚀</span>
-        </button>
+        <div className="home__actions">
+          <button type="button" className="btn btn--start" onClick={onStart} disabled={loading}>
+            ¡Comenzar el reto! <span aria-hidden="true">🚀</span>
+          </button>
+          <button type="button" className="btn btn--anime" onClick={onStartAnime} disabled={loading}>
+            {loading ? (
+              'Conectando con las APIs…'
+            ) : (
+              <>
+                Modo anime <span aria-hidden="true">⚡🍥🐉</span>
+              </>
+            )}
+          </button>
+        </div>
+        <p className="home__hint">
+          El modo anime crea preguntas nuevas en cada partida con datos en vivo de PokeAPI, la API de Naruto y la de
+          Dragon Ball.
+        </p>
+        {loadError && (
+          <p className="home__error" role="alert">
+            {loadError}. Inténtalo de nuevo en unos segundos.
+          </p>
+        )}
 
         <p className="home__rules">
           <strong>Reglas:</strong> {POINTS.normal} puntos por acierto y {POINTS.bonus} si aciertas la pregunta

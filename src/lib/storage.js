@@ -1,21 +1,23 @@
 const RECORD_KEY = 'daisquizz:record'
 const SOUND_KEY = 'daisquizz:sound'
 
-export function loadRecord() {
+const recordKey = (variant) => (variant === 'classic' ? RECORD_KEY : `${RECORD_KEY}:${variant}`)
+
+export function loadRecord(variant = 'classic') {
   try {
-    const raw = localStorage.getItem(RECORD_KEY)
+    const raw = localStorage.getItem(recordKey(variant))
     return raw ? JSON.parse(raw) : null
   } catch {
     return null
   }
 }
 
-export function saveRecordIfBetter(result) {
-  const current = loadRecord()
+export function saveRecordIfBetter(result, variant = 'classic') {
+  const current = loadRecord(variant)
   const isNew = !current || result.score > current.score
   if (isNew) {
     try {
-      localStorage.setItem(RECORD_KEY, JSON.stringify({ ...result, date: new Date().toISOString() }))
+      localStorage.setItem(recordKey(variant), JSON.stringify({ ...result, date: new Date().toISOString() }))
     } catch {
       /* almacenamiento no disponible */
     }

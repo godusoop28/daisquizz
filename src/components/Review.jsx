@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { ALL_QUESTIONS, CATEGORIES } from '../data/questions.js'
+import { CATEGORIES } from '../data/questions.js'
 
 const LETTERS = ['A', 'B', 'C']
 const STATE_LABEL = { ok: '✓ Acierto', timeout: '⏰ Sin responder', bad: '✗ Fallo' }
 
-export default function Review({ answers, onBack, onReplay }) {
+export default function Review({ questions, answers, onBack, onReplay }) {
   const [filter, setFilter] = useState('all') // all | wrong
   const titleRef = useRef(null)
 
@@ -13,7 +13,7 @@ export default function Review({ answers, onBack, onReplay }) {
     titleRef.current?.focus({ preventScroll: true })
   }, [])
 
-  const rows = ALL_QUESTIONS.map((q, i) => ({ q, a: answers[i], n: i + 1 })).filter(
+  const rows = questions.map((q, i) => ({ q, a: answers[i], n: i + 1 })).filter(
     ({ a }) => filter === 'all' || !a?.correct,
   )
 
